@@ -1,0 +1,19 @@
+name: prometheus
+
+services:
+  prometheus:
+    image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+    hostname: prometheus
+    container_name: prometheus
+    ports:
+      - ${PROMETHEUS_PORT_EXTERNAL}:9090
+    command:
+      - '--config.file=/usr/share/prometheus/prometheus.yml'
+    volumes:
+      - ./prometheus:/usr/share/prometheus/
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
