@@ -14,6 +14,19 @@ services:
     networks:
       - network
 
+  redis-exporter-master-1:
+    image: oliver006/redis_exporter:${REDIS_EXPORTER_VERSION:-latest}
+    hostname: redis-exporter-master-1
+    container_name: redis-exporter-master-1
+    ports:
+      - ${REDIS_EXPORTER_MASTER_1_PORT_EXTERNAL}:9121
+    environment:
+      - REDIS_ADDR=redis://redis-master-1:6379
+    networks:
+      - network
+    depends_on:
+      - redis-master-1
+
   redis-master-2:
     image: redis:${REDIS_VERSION:-latest}
     hostname: redis-master-2
@@ -27,6 +40,19 @@ services:
     networks:
       - network
 
+  redis-exporter-master-2:
+    image: oliver006/redis_exporter:${REDIS_EXPORTER_VERSION:-latest}
+    hostname: redis-exporter-master-2
+    container_name: redis-exporter-master-2
+    ports:
+      - ${REDIS_EXPORTER_MASTER_2_PORT_EXTERNAL}:9121
+    environment:
+      - REDIS_ADDR=redis://redis-master-2:6379
+    networks:
+      - network
+    depends_on:
+      - redis-master-2
+
   redis-master-3:
     image: redis:${REDIS_VERSION:-latest}
     hostname: redis-master-3
@@ -39,6 +65,19 @@ services:
     command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-master-3.conf --cluster-node-timeout 3000 --appendonly yes"]
     networks:
       - network
+
+  redis-exporter-master-3:
+    image: oliver006/redis_exporter:${REDIS_EXPORTER_VERSION:-latest}
+    hostname: redis-exporter-master-3
+    container_name: redis-exporter-master-3
+    ports:
+      - ${REDIS_EXPORTER_MASTER_3_PORT_EXTERNAL}:9121
+    environment:
+      - REDIS_ADDR=redis://redis-master-3:6379
+    networks:
+      - network
+    depends_on:
+      - redis-master-3
 
   redis-slave-1:
     image: redis:${REDIS_VERSION:-latest}
@@ -117,6 +156,24 @@ services:
     command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-6.conf --cluster-node-timeout 3000 --appendonly yes"]
     networks:
       - network
+
+  redis-exporter-slave:
+    image: oliver006/redis_exporter:${REDIS_EXPORTER_VERSION:-latest}
+    hostname: redis-exporter-slave
+    container_name: redis-exporter-slave
+    ports:
+      - ${REDIS_EXPORTER_SLAVE_PORT_EXTERNAL}:9121
+    environment:
+      - REDIS_ADDR=
+    networks:
+      - network
+    depends_on:
+      - redis-slave-1
+      - redis-slave-2
+      - redis-slave-3
+      - redis-slave-4
+      - redis-slave-5
+      - redis-slave-6
 
   redis-cluster-creator:
     image: redis:${REDIS_VERSION:-latest}
