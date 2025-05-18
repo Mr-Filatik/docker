@@ -7,7 +7,10 @@ scrape_configs:
       - targets: ['host.docker.internal:9090']
   - job_name: 'kafka'
     static_configs:
-      - targets: ['host.docker.internal:9991','host.docker.internal:9992','host.docker.internal:9993']
+      - targets:
+        - host.docker.internal:9991
+        - host.docker.internal:9992
+        - host.docker.internal:9993
   - job_name: 'redis_exporter'
     static_configs:
       - targets:

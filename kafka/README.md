@@ -14,6 +14,19 @@ docker-compose up -d
 
 To test the functionality, go to [http://localhost:8092/ui/clusters/dev/brokers](http://localhost:8092/ui/clusters/dev/brokers) and make sure the cluster `dev` and all brokers are available.
 
+### Using
+
+The following lines should be added to the prometheus:
+
+```yml
+- job_name: 'kafka'
+  static_configs:
+    - targets:
+      - host.docker.internal:9991
+      - host.docker.internal:9992
+      - host.docker.internal:9993
+```
+
 ### Stop
 
 To rollback and delete containers, run the command:
