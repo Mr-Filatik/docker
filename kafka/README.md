@@ -12,6 +12,8 @@ Open the console at the file path and run the command:
 docker-compose up -d
 ```
 
+To test the functionality, go to [http://localhost:8092/ui/clusters/dev/brokers](http://localhost:8092/ui/clusters/dev/brokers) and make sure the cluster `dev` and all brokers are available.
+
 ### Stop
 
 To rollback and delete containers, run the command:

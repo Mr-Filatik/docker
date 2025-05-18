@@ -12,6 +12,8 @@ Open the console at the file path and run the command:
 docker-compose up -d
 ```
 
+To test the functionality, go to [http://localhost:9090/targets](http://localhost:9090/targets) and make sure that metrics are being read for the specified services.
+
 ### Stop
 
 To rollback and delete containers, run the command:
