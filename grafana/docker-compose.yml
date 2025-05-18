@@ -1,0 +1,17 @@
+name: grafana
+
+services:
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION:-latest}
+    hostname: grafana
+    container_name: grafana
+    ports:
+      - ${GRAFANA_PORT_EXTERNAL}:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge

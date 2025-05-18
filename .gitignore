@@ -1,0 +1,2 @@
+# Ignore all `data` folders and their contents. The `data` folder is used to access volumes.
+**/data/
