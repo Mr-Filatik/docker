@@ -1,0 +1,143 @@
+name: redis-cluster
+
+services:
+  redis-master-1:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-master-1
+    container_name: redis-master-1
+    ports:
+      - ${REDIS_MASTER_1_PORT_EXTERNAL}:6379
+      - 1${REDIS_MASTER_1_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-master-1:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-master-1.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-master-2:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-master-2
+    container_name: redis-master-2
+    ports:
+      - ${REDIS_MASTER_2_PORT_EXTERNAL}:6379
+      - 1${REDIS_MASTER_2_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-master-2:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-master-2.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-master-3:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-master-3
+    container_name: redis-master-3
+    ports:
+      - ${REDIS_MASTER_3_PORT_EXTERNAL}:6379
+      - 1${REDIS_MASTER_3_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-master-3:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-master-3.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-slave-1:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-slave-1
+    container_name: redis-slave-1
+    ports:
+      - ${REDIS_SLAVE_1_PORT_EXTERNAL}:6379
+      - 1${REDIS_SLAVE_1_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-slave-1:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-1.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-slave-2:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-slave-2
+    container_name: redis-slave-2
+    ports:
+      - ${REDIS_SLAVE_2_PORT_EXTERNAL}:6379
+      - 1${REDIS_SLAVE_2_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-slave-2:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-2.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-slave-3:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-slave-3
+    container_name: redis-slave-3
+    ports:
+      - ${REDIS_SLAVE_3_PORT_EXTERNAL}:6379
+      - 1${REDIS_SLAVE_3_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-slave-3:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-3.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-slave-4:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-slave-4
+    container_name: redis-slave-4
+    ports:
+      - ${REDIS_SLAVE_4_PORT_EXTERNAL}:6379
+      - 1${REDIS_SLAVE_4_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-slave-4:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-4.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-slave-5:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-slave-5
+    container_name: redis-slave-5
+    ports:
+      - ${REDIS_SLAVE_5_PORT_EXTERNAL}:6379
+      - 1${REDIS_SLAVE_5_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-slave-5:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-5.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-slave-6:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-slave-6
+    container_name: redis-slave-6
+    ports:
+      - ${REDIS_SLAVE_6_PORT_EXTERNAL}:6379
+      - 1${REDIS_SLAVE_6_PORT_EXTERNAL}:16379
+    volumes:
+      - ./data/redis-slave-6:/data
+    command: ["sh", "-c", "redis-server --cluster-enabled yes --cluster-config-file redis-slave-6.conf --cluster-node-timeout 3000 --appendonly yes"]
+    networks:
+      - network
+
+  redis-cluster-creator:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis-cluster-creator
+    container_name: redis-cluster-creator
+    ports:
+      - ${REDIS_CLUSTER_PORT_EXTERNAL}:6379
+    networks:
+      - network
+    depends_on:
+      - redis-master-1
+      - redis-master-2
+      - redis-master-3
+      - redis-slave-1
+      - redis-slave-2
+      - redis-slave-3
+      - redis-slave-4
+      - redis-slave-5
+      - redis-slave-6
+    command: ["sh", "-c", "redis-cli --cluster create redis-master-1:6379 redis-master-2:6379 redis-master-3:6379 redis-slave-1:6379 redis-slave-2:6379 redis-slave-3:6379 redis-slave-4:6379 redis-slave-5:6379 redis-slave-6:6379 --cluster-replicas 2 --cluster-yes"]
+
+networks:
+  network:
+    driver: bridge
