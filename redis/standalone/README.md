@@ -14,7 +14,7 @@ docker-compose up -d
 
 ### Using Redis Insight
 
-Redis Insight это UI для доступа к Redis.
+Redis Insight is a UI for accessing Redis.
 
 In order to connect to a radis instance you need to:
 
