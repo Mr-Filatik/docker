@@ -1,6 +1,6 @@
 # docker - redis - standalone
 
-Single instance of Redis with UI and metrics tracking.
+One Redis instance with two replicas with UI and metrics tracking.
 
 ## Using
 
@@ -23,7 +23,7 @@ In order to connect to a radis instance you need to:
 3. Go to `Connection Settings`;
 4. Type:
 	1. `Database Alias`: arbitrary name
-	2. `Host`: `redis`
+	2. `Host`: `redis-master` (`redis-slave-1` and `redis-slave-2`)
 	3. `Port`: `6379`
 5. Press `Add Redis database`.
 
@@ -32,10 +32,20 @@ In order to connect to a radis instance you need to:
 The following lines should be added to the prometheus:
 
 ```yml
-- job_name: 'redis_standalone_exporter'
+- job_name: 'redis_standalone_exporter_targets'
   static_configs:
     - targets:
-      - host.docker.internal:9910
+      - redis://host.docker.internal:6370
+      - redis://host.docker.internal:6381
+      - redis://host.docker.internal:6382
+  metrics_path: /scrape
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: __param_target
+    - source_labels: [__param_target]
+      target_label: instance
+    - target_label: __address__
+      replacement: host.docker.internal:9910
 ```
 
 ### Using metrics with Grafana

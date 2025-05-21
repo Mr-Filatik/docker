@@ -11,7 +11,17 @@ scrape_configs:
         - host.docker.internal:9991
         - host.docker.internal:9992
         - host.docker.internal:9993
-  - job_name: 'redis_standalone_exporter'
+  - job_name: 'redis_standalone_exporter_targets'
     static_configs:
       - targets:
-        - host.docker.internal:9910
+        - redis://host.docker.internal:6370
+        - redis://host.docker.internal:6381
+        - redis://host.docker.internal:6382
+    metrics_path: /scrape
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: host.docker.internal:9910

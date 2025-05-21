@@ -1,14 +1,42 @@
 name: redis-standalone
 
 services:
-  redis:
+  redis-master:
     image: redis:${REDIS_VERSION:-latest}
-    hostname: redis
-    container_name: redis
+    hostname: redis-master
+    container_name: redis-master
     ports:
-      - ${REDIS_PORT_EXTERNAL}:6379
+      - ${REDIS_MASTER_PORT_EXTERNAL}:6379
     volumes:
-      - ./data/redis:/data
+      - ./data/redis-master:/data
+    networks:
+      - network
+
+  redis-slave-1:
+    image: redis:${REDIS_VERSION:-latest}
+    container_name: redis-slave-1
+    hostname: redis-slave-1
+    ports:
+      - ${REDIS_SLAVE_1_PORT_EXTERNAL}:6379
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+    depends_on:
+      - redis-master
+    command: ["sh", "-c", "redis-server --slaveof redis-master 6379"]
+    networks:
+      - network
+
+  redis-slave-2:
+    image: redis:${REDIS_VERSION:-latest}
+    container_name: redis-slave-2
+    hostname: redis-slave-2
+    ports:
+      - ${REDIS_SLAVE_2_PORT_EXTERNAL}:6379
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+    depends_on:
+      - redis-master
+    command: ["sh", "-c", "redis-server --slaveof redis-master 6379"]
     networks:
       - network
 
@@ -19,11 +47,13 @@ services:
     ports:
       - ${REDIS_EXPORTER_PORT_EXTERNAL}:9121
     environment:
-      - REDIS_ADDR=redis://redis:6379
+      - REDIS_ADDR=
     networks:
       - network
     depends_on:
-      - redis
+      - redis-master
+      - redis-slave-1
+      - redis-slave-2
 
   redis-insight:
     image: redislabs/redisinsight:${REDIS_INSIGHT_VERSION:-latest}
