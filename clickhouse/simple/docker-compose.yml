@@ -1,0 +1,33 @@
+name: clickhouse-simple
+
+services:
+  clickhouse-server:
+    image: yandex/clickhouse-server:${CLICKHOUSE_SERVER_VERSION:-latest}
+    container_name: clickhouse-server
+    hostname: clickhouse-server
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=password
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=true
+    ports:
+      - ${CLICKHOUSE_SERVER_PORT_EXTERNAL}:8123
+      - 9000:9000
+    volumes:
+      - ./data/clickhouse:/var/lib/clickhouse
+    networks:
+      - network
+
+  clickhouse-client:
+    image: yandex/clickhouse-client:${CLICKHOUSE_CLIENT_VERSION:-latest}
+    container_name: clickhouse-client
+    networks:
+      - network
+    depends_on:
+      - clickhouse-server
+    entrypoint: ["sh", "-c", "sleep 5 && clickhouse client --host clickhouse-server"]
+    stdin_open: true
+    tty: true
+
+networks:
+  network:
+    driver: bridge
