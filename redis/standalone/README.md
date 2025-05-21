@@ -38,6 +38,12 @@ The following lines should be added to the prometheus:
       - host.docker.internal:9910
 ```
 
+### Using metrics with Grafana
+
+In order to observe the metrics in grafana, the following dashboard must be imported:
+
+[Redis Exporter Dashboard](https://grafana.com/grafana/dashboards/763-redis-dashboard-for-prometheus-redis-exporter-1-x/)
+
 ### Stop
 
 To rollback and delete containers, run the command:
