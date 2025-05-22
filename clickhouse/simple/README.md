@@ -47,4 +47,14 @@ The structure of the project is as follows:
 
 ## Customization
 
-Customization is done at the `.env` file level, where you can change ports and image versions.
+Configuration is done at the `.env` file level, where you can change ports, image versions, etc.
+
+Create a file for your environment, for example `.env.dev` based on `.env`. And run the command:
+
+```bash
+docker-compose --env-file .env.dev up -d
+```
+
+Files that are added to `.gitignore`: `.env.dev`, `.env.test`, `.env.prod`.
+
+

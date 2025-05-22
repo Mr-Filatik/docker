@@ -6,14 +6,14 @@ services:
     container_name: clickhouse-server
     hostname: clickhouse-server
     environment:
-      - CLICKHOUSE_USER=default
-      - CLICKHOUSE_PASSWORD=password
-      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=true
+      CLICKHOUSE_USER: ${CLICKHOUSE_SERVER_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_SERVER_password}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: true
     ports:
       - ${CLICKHOUSE_SERVER_PORT_EXTERNAL}:8123
       - 9000:9000
     volumes:
-      - ./data/clickhouse:/var/lib/clickhouse
+      - ./volumes/clickhouse:/var/lib/clickhouse
     networks:
       - network
 
