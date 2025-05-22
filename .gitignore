@@ -1,2 +1,8 @@
-# Ignore all `data` folders and their contents. The `data` folder is used to access volumes.
+# Ignore all `data` and `volumes` folders and their contents. The `data` and `volumes` folder is used to access volumes.
 **/data/
+**/volumes/
+
+# Ignoring files with custom settings.
+.env.dev
+.env.test
+.env.prod
